@@ -1,0 +1,65 @@
+#!/bin/bash
+
+blue='\033[0;34m'
+endcolor='\033[m'
+
+function usage(){
+	printf $blue"Usage: gittt [args]
+
+	gittt [branch name to be pushed onto] <optional>[comment; default: 'minor changes']\
+<optional>[file1] <optional>[file2] ....
+
+example:
+git dev
+git master 'first commit'
+git dev 'first commit' 'Readme.md' 'main.cpp'
+git dev 'final commit' 'Liscence'
+"$endcolor"\n"
+}
+
+while getopts h options; do
+	case $options in
+		h) usage && exit;;
+	esac
+done
+
+
+if [ "$#" -lt 1 ]; then    	
+	printf $red"Illegal number of parameters"$endcolor"\n"
+	exit
+fi
+
+git status
+
+function check(){
+	echo "Want to proceed? y/n"
+	read status
+	if [ "$status" != "y" ]; then 
+		exit
+	fi
+}
+
+if [ "$#" -eq 1 ]; then 
+	git add .
+	check
+	git commit -m "minor changes"
+	check
+	git push origin "$1"
+fi
+
+if [ "$#" -eq 2 ]; then 
+	git add .
+	check
+	git commit -m "$2"
+	check
+	git push origin "$1"
+fi
+
+if [ "$#" -gt 2 ]; then
+	echo  "${@:3}"
+	git add "${@:3}"
+	check
+	git commit -m "$2"
+	check
+	git push origin "$1"
+fi
