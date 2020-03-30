@@ -18,22 +18,13 @@ git dev 'final commit' 'Liscence'
 "$endcolor"\n"
 }
 
-while getopts h options; do
-	case $options in
-		h) usage && exit;;
-	esac
-done
+function status(){	
+	printf $blue"<status>\n"$endcolor
 
+	git status
 
-if [ "$#" -lt 1 ]; then    	
-	printf $red"Illegal number of parameters"$endcolor"\n"
-	exit
-fi
-printf $blue"<status>\n"$endcolor
-
-git status
-
-printf $blue"<status>\n\n"$endcolor
+	printf $blue"<status>\n\n"$endcolor
+}
 
 function check(){
 	printf $red"Want to "$1"? y/n: "$endcolor
@@ -43,8 +34,23 @@ function check(){
 	fi
 }
 
+while getopts h options; do
+	case $options in
+		h) usage && exit;;
+	esac
+done
+
+status
+
+if [ "$#" -lt 1 ]; then    	
+	printf $red"Illegal number of parameters"$endcolor"\n"
+	exit
+fi
+
+
 if [ "$#" -eq 1 ]; then 
 	git add .
+	status
 	check commit
 	git commit -m "minor changes"
 	check push
@@ -53,6 +59,7 @@ fi
 
 if [ "$#" -eq 2 ]; then 
 	git add .
+	status
 	check commit
 	git commit -m "$2"
 	check push
@@ -62,6 +69,7 @@ fi
 if [ "$#" -gt 2 ]; then
 	echo  "${@:3}"
 	git add "${@:3}"
+	status
 	check commit
 	git commit -m "$2"
 	check push
