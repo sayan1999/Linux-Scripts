@@ -1,6 +1,7 @@
 #!/bin/bash
 
 blue='\033[0;34m'
+red='\033[0;31m'
 endcolor='\033[m'
 
 function usage(){
@@ -28,11 +29,14 @@ if [ "$#" -lt 1 ]; then
 	printf $red"Illegal number of parameters"$endcolor"\n"
 	exit
 fi
+printf $blue"<status>\n"$endcolor
 
 git status
 
+printf $blue"<status>\n\n"$endcolor
+
 function check(){
-	echo "Want to proceed? y/n"
+	printf $red"Want to"$1"? y/n: "$endcolor
 	read status
 	if [ "$status" != "y" ]; then 
 		exit
@@ -41,25 +45,25 @@ function check(){
 
 if [ "$#" -eq 1 ]; then 
 	git add .
-	check
+	check commit
 	git commit -m "minor changes"
-	check
+	check push
 	git push origin "$1"
 fi
 
 if [ "$#" -eq 2 ]; then 
 	git add .
-	check
+	check commit
 	git commit -m "$2"
-	check
+	check push
 	git push origin "$1"
 fi
 
 if [ "$#" -gt 2 ]; then
 	echo  "${@:3}"
 	git add "${@:3}"
-	check
+	check commit
 	git commit -m "$2"
-	check
+	check push
 	git push origin "$1"
 fi
