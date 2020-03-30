@@ -36,7 +36,7 @@ git status
 printf $blue"<status>\n\n"$endcolor
 
 function check(){
-	printf $red"Want to"$1"? y/n: "$endcolor
+	printf $red"Want to "$1"? y/n: "$endcolor
 	read status
 	if [ "$status" != "y" ]; then 
 		exit
